@@ -25,7 +25,6 @@ public class UsuarioService {
             throw new RuntimeException("El correo ya está registrado");
         }
 
-        // Encriptar las contraseña antes de guardar
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 
         Usuario guardado = usuarioRepository.save(usuario);
@@ -45,7 +44,6 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Correo o contraseña incorrectos"));
 
-        // Verificar contraseña encriptada
         if (!passwordEncoder.matches(password, usuario.getPassword())) {
             throw new RuntimeException("Correo o contraseña incorrectos");
         }
@@ -56,6 +54,28 @@ public class UsuarioService {
                 "id", usuario.getId(),
                 "nombres", usuario.getNombres(),
                 "apellidos", usuario.getApellidos(),
+                "correo", usuario.getCorreo(),
+                "rol", usuario.getRol().name(),
+                "token", token);
+    }
+
+    public Map<String, Object> registrarOLoginGoogle(String nombres, String apellidos, String correo) {
+        Usuario usuario = usuarioRepository.findByCorreo(correo).orElseGet(() -> {
+            Usuario nuevo = new Usuario();
+            nuevo.setNombres(nombres);
+            nuevo.setApellidos(apellidos != null ? apellidos : "");
+            nuevo.setCorreo(correo);
+            nuevo.setPassword(passwordEncoder.encode("google-auth-" + correo));
+            nuevo.setTelefono("");
+            nuevo.setRol(Usuario.Rol.CLIENTE);
+            return usuarioRepository.save(nuevo);
+        });
+
+        String token = jwtService.generarToken(usuario.getCorreo(), usuario.getRol().name());
+
+        return Map.of(
+                "id", usuario.getId(),
+                "nombres", usuario.getNombres(),
                 "correo", usuario.getCorreo(),
                 "rol", usuario.getRol().name(),
                 "token", token);
