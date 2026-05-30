@@ -21,6 +21,7 @@ public class UsuarioController {
             Usuario usuario = new Usuario();
             usuario.setNombres(body.get("nombres"));
             usuario.setApellidos(body.get("apellidos"));
+            usuario.setTelefono(body.get("telefono"));
             usuario.setCorreo(body.get("correo"));
             usuario.setPassword(body.get("password"));
             usuario.setRol(Usuario.Rol.valueOf(body.get("rol")));

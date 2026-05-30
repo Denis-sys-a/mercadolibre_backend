@@ -21,6 +21,7 @@ public class UsuarioService {
                 "id", guardado.getId(),
                 "nombres", guardado.getNombres(),
                 "apellidos", guardado.getApellidos(),
+                "telefono", guardado.getTelefono(),
                 "correo", guardado.getCorreo(),
                 "rol", guardado.getRol().name(),
                 "token", "token-" + guardado.getId());

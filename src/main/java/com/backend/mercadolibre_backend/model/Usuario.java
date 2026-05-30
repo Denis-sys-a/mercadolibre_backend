@@ -19,6 +19,9 @@ public class Usuario {
     private String apellidos;
 
     @Column(nullable = false)
+    private String telefono;
+
+    @Column(nullable = false)
     private String correo;
 
     @Column(nullable = false)
